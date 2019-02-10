@@ -1,6 +1,6 @@
 const axios = require('axios');
 const bcrypt=require('bcryptjs')
-
+const jwt      = require('jsonwebtoken')
 const db       = require('../database/dbConfig.js')
 
 
@@ -25,9 +25,34 @@ function register(req, res) {
       res.status(500).send(err);
     });
 }
+function generateToken(user){
+  const payload = {
+    username: user.username,
+  }
+  const secret = process.env.JWT_SECRET
+  const options ={
+    expiresIn:'10m'
+  }
+  return jwt.sign(payload, secret, options)
+}
 
 function login(req, res) {
   // implement user login
+  const creds = req.body;
+  db("users")
+    .where("username", creds.username).first()
+    .then(user => { 
+    if( user && bcrypt.compareSync(creds.password, user.password)){
+      const token = generateToken(user);
+      res.status(202).json({msg:"user logged in", token });
+    }
+    else{
+      res.status(401).send("invalid username or password");
+    }
+    })
+    .catch(err =>{
+      res.status(500).send(err);
+    })
 }
 
 function getJokes(req, res) {
