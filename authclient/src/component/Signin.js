@@ -3,8 +3,8 @@ import axios from 'axios'
 
 class Signin extends Component {
   state = { 
-    username:'',
-    password:'',
+    username:'doobee46',
+    password:'metro246',
     message:''
    }
 
@@ -28,11 +28,10 @@ class Signin extends Component {
       .catch(err =>{
         console.log(err)
       })
-    }
+    } 
 
 
   render() { 
-    console.log(this.state.message)
     return ( 
       <>
       <form onSubmit={this.hanldeSubmit}>
@@ -54,7 +53,7 @@ class Signin extends Component {
 
         <button type="submit"onClick={this.handleSubmit}>Login</button>
       </form>
-      
+      <p>{this.state.message}</p>
       </>
      );
   }
